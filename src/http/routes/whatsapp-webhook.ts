@@ -1,16 +1,19 @@
-import { Request, Response } from "express"
+import { bot } from '@/functions/bot'
+import type { Request, Response } from 'express'
 
 export const whatsappWebhook = async (req: Request, res: Response) => {
-  const message = req.body.Body; 
-  const from = req.body.From; 
-  const to = req.body.To; 
-  
-  console.log(`${to} ==> Mensagem recebida de ${from}: ${message}`);
+  const messageReq = req.body.Body
+  const from = req.body.From
+  const to = req.body.To
 
-  res.set('Content-Type', 'text/xml');
+  console.log(`${to} ==> Mensagem recebida de ${from}: ${messageReq}`)
+
+  const messageResp = bot(messageReq)
+
+  res.set('Content-Type', 'text/xml')
   res.send(`
       <Response>
-          <Message>Recebemos sua mensagem: "${message}". Obrigado por entrar em contato!</Message>
+          <Message>${messageResp}</Message>
       </Response>
-  `);
+  `)
 }
